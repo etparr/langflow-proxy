@@ -1,17 +1,22 @@
 # Langflow Setup Guide  
 This guide covers how to set up and deploy a Langflow instance for use with the proxy server.
 
-## What is Langflow?  
-Langflow is an open‑source UI for building and deploying LangChain‑style flows (visual workflows of LLMs, tools, agents, etc.). It gives you a drag‑and‑drop interface for designing agent‑workflows which you can then deploy as an API or embed in an app.  
-[Langflow Documentation](https://docs.langflow.org/?utm_source=chatgpt.com)
+## What is Langflow?
 
-It supports major LLMs, vector stores, and agent components, and you can extend it with custom components.  
-[Langflow GitHub Repository](https://github.com/langflow-ai/langflow?utm_source=chatgpt.com)
+Langflow is an open-source UI for building and deploying LangChain-style flows (visual workflows of LLMs, tools, agents, etc.). It provides a drag-and-drop interface for designing agent workflows which you can then deploy as an API or embed in an application.
 
-## Deployment Options  
-You can deploy Langflow in several ways (choose based on dev vs prod, scaling, maintenance).  
-1. Docker (Recommended for development)  
-2. Cloud platforms (Azure, AWS, GCP)  
+[Langflow Documentation](https://docs.langflow.org)
+
+It supports major LLMs, vector stores, and agent components, and you can extend it with custom components.
+
+[Langflow GitHub Repository](https://github.com/langflow-ai/langflow)
+
+## Deployment Options
+
+You can deploy Langflow in several ways (choose based on dev vs prod, scaling, maintenance):
+
+1. Docker (Recommended for development)
+2. Cloud platforms (Azure, AWS, GCP)
 3. Kubernetes (Production deployments)  
 
 ---
@@ -170,68 +175,78 @@ kubectl apply -f langflow-deployment.yaml
 
 ---
 
-## Creating and Exporting Flows  
+## Creating and Exporting Flows
 
-1. Access your Langflow UI  
-2. Create a new flow using the visual editor  
-3. Add components (LLMs, prompts, tools, etc.)  
-4. Connect components into a workflow  
-5. Test your flow in the Playground  
-[Langflow Quickstart Guide](https://docs.langflow.org/get-started-quickstart?utm_source=chatgpt.com)
+1. Access your Langflow UI
+2. Create a new flow using the visual editor
+3. Add components (LLMs, prompts, tools, etc.)
+4. Connect components into a workflow
+5. Test your flow in the Playground
 
-### Exporting  
-Click “Export” → Download JSON → Save in `flows/` directory.  
+[Langflow Quickstart Guide](https://docs.langflow.org/get-started-quickstart)
 
-API Endpoint format:  
-\`https://your‑langflow.com/api/v1/run/<flow‑id>\`
+### Exporting
 
----
+Click "Export" then "Download JSON" and save in `flows/` directory.
 
-## Configuring API Keys  
+API Endpoint format:
 
-Generate an API key via Settings → API Keys → “Generate New Key”.  
-Copy it immediately and store securely.  
-
-Use in proxy’s `.env`:  
-\`\`\`env
-LANGFLOW_API_KEY=lf‑your‑api‑key‑here
-\`\`\`
+```
+https://your-langflow.com/api/v1/run/<flow-id>
+```
 
 ---
 
-## Security Best Practices  
+## Configuring API Keys
 
-- Always use HTTPS in production  
-- Store keys in environment variables or secret managers  
-- Enable authentication in Langflow  
-- Restrict access with network rules  
-- Rotate API keys regularly  
-- Monitor logs  
+Generate an API key via Settings > API Keys > "Generate New Key".
+Copy it immediately and store securely.
 
-[Security Docs](https://docs.langflow.org/?utm_source=chatgpt.com)
+Use in proxy's `.env`:
+
+```env
+LANGFLOW_API_KEY=lf-your-api-key-here
+```
 
 ---
 
-## Database Configuration  
+## Security Best Practices
 
-### Default: SQLite  
-Langflow uses SQLite for dev by default.  
+- Always use HTTPS in production
+- Store keys in environment variables or secret managers
+- Enable authentication in Langflow
+- Restrict access with network rules
+- Rotate API keys regularly
+- Monitor logs
 
-### PostgreSQL Setup  
-\`\`\`env
+[Security Documentation](https://docs.langflow.org)
+
+---
+
+## Database Configuration
+
+### Default: SQLite
+
+Langflow uses SQLite for development by default.
+
+### PostgreSQL Setup
+
+```env
 LANGFLOW_DATABASE_URL=postgresql://user:password@host:5432/langflow
-\`\`\`
+```
 
-In Docker Compose:  
-\`\`\`yaml
+In Docker Compose:
+
+```yaml
 environment:
   - LANGFLOW_DATABASE_URL=postgresql://user:password@postgres:5432/langflow
-\`\`\`
+```
 
 ---
 
-## Environment Variables Reference  
-\`\`\`env
+## Environment Variables Reference
+
+```env
 LANGFLOW_AUTO_LOGIN=False
 LANGFLOW_SAVE_DB_IN_CONFIG_DIR=True
 LANGFLOW_DATABASE_URL=sqlite:///./langflow.db
@@ -245,87 +260,101 @@ LANGFLOW_LOG_LEVEL=INFO
 OPENAI_API_KEY=your-key
 ANTHROPIC_API_KEY=your-key
 GOOGLE_API_KEY=your-key
-\`\`\`
+```
 
 ---
 
-## Testing Your Langflow Instance  
+## Testing Your Langflow Instance
 
-### curl  
-\`\`\`bash
-curl https://your‑langflow-instance.com/health
-curl -X POST https://your‑langflow-instance.com/api/v1/run/FLOW_ID   -H "Content-Type: application/json"   -H "x-api-key: your‑api‑key"   -d '{
+### curl
+
+```bash
+curl https://your-langflow-instance.com/health
+
+curl -X POST https://your-langflow-instance.com/api/v1/run/FLOW_ID \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: your-api-key" \
+  -d '{
     "input_value": "Test message",
     "input_type": "chat",
     "output_type": "chat",
-    "session_id": "test‑session"
+    "session_id": "test-session"
   }'
-\`\`\`
+```
 
-### Python  
-\`\`\`python
+### Python
+
+```python
 import httpx
 
 async def test_langflow():
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            "https://your‑langflow‑instance.com/api/v1/run/FLOW_ID",
+            "https://your-langflow-instance.com/api/v1/run/FLOW_ID",
             json={
                 "input_value": "Test message",
                 "input_type": "chat",
                 "output_type": "chat",
-                "session_id": "test‑session"
+                "session_id": "test-session"
             },
             headers={
-                "Content‑Type": "application/json",
-                "x‑api‑key": "your‑api‑key"
+                "Content-Type": "application/json",
+                "x-api-key": "your-api-key"
             }
         )
         print(response.json())
-\`\`\`
+```
 
 ---
 
-## Monitoring and Logging  
-\`\`\`env
+## Monitoring and Logging
+
+```env
 LANGFLOW_LOG_LEVEL=DEBUG
-\`\`\`
+```
 
-View logs:  
-- Docker → `docker logs -f <container-id>`  
-- Kubernetes → `kubectl logs -f deployment/langflow`  
+View logs:
 
----
-
-## Troubleshooting  
-
-### Can't connect  
-- Check container or pod is running (`docker ps`, `kubectl get pods`)  
-- Verify port 7860 open and mapped  
-- Confirm proxy → Langflow network connectivity  
-
-### Authentication failures  
-- Ensure API key and `x-api-key` header are correct  
-- Check authentication enabled in Langflow  
-
-### Flows not loading  
-- Validate JSONs in `/app/flows`  
-- Confirm `LANGFLOW_LOAD_FLOWS_PATH` set correctly  
+- Docker: `docker logs -f <container-id>`
+- Kubernetes: `kubectl logs -f deployment/langflow`  
 
 ---
 
-## Additional Resources  
-- [Official Langflow Documentation](https://docs.langflow.org)  
-- [Langflow GitHub](https://github.com/langflow-ai/langflow)  
-- [LangChain Documentation](https://python.langchain.com)  
-- [Docker Docs](https://docs.docker.com)  
-- [Kubernetes Docs](https://kubernetes.io/docs)  
+## Troubleshooting
+
+### Can't connect
+
+- Check container or pod is running (`docker ps`, `kubectl get pods`)
+- Verify port 7860 is open and mapped
+- Confirm proxy to Langflow network connectivity
+
+### Authentication failures
+
+- Ensure API key and `x-api-key` header are correct
+- Check authentication is enabled in Langflow
+
+### Flows not loading
+
+- Validate JSONs in `/app/flows`
+- Confirm `LANGFLOW_LOAD_FLOWS_PATH` is set correctly  
 
 ---
 
-## Next Steps  
-After setup:  
-1. Return to the [Getting Started Guide](GETTING_STARTED.md)  
-2. Configure proxy → Langflow instance  
-3. Review [API Reference](API_REFERENCE.md)  
-4. Deploy to production with [Deployment Guide](DEPLOYMENT.md)  
+## Additional Resources
+
+- [Official Langflow Documentation](https://docs.langflow.org)
+- [Langflow GitHub](https://github.com/langflow-ai/langflow)
+- [LangChain Documentation](https://python.langchain.com)
+- [Docker Documentation](https://docs.docker.com)
+- [Kubernetes Documentation](https://kubernetes.io/docs)
+
+---
+
+## Next Steps
+
+After setup:
+
+1. Return to the [Getting Started Guide](GETTING_STARTED.md)
+2. Configure proxy to Langflow instance
+3. Review [FastAPI Guide](FASTAPI_GUIDE.md)
+4. Deploy to production with [Deployment Guide](DEPLOYMENT.md)
