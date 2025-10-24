@@ -1,28 +1,28 @@
 # FastAPI Server Guide
 
-This guide explains how the FastAPI server works in simple terms, suitable for non-technical professionals learning about AI and APIs.
+This guide explains how the FastAPI server works for the Langflow Proxy application.
 
 ## What is the FastAPI Server?
 
-Think of the FastAPI server as a **smart receptionist** for your AI agents:
+The FastAPI server is an intermediary service that:
 
-1. It receives requests (messages) from applications
-2. It knows which AI agent should handle each request
-3. It sends the message to the right agent in Langflow
-4. It receives the response and sends it back
+1. Receives requests (messages) from client applications
+2. Routes requests to the appropriate AI agent in Langflow
+3. Forwards the message to Langflow with proper authentication
+4. Returns the agent's response to the client
 
 ### Why Use a Proxy Server?
 
-Instead of having every application connect directly to Langflow, the proxy server:
+The proxy server provides several advantages over direct Langflow connections:
 
-- **Centralizes access**: One place to manage all your agents
-- **Simplifies configuration**: Applications don't need Langflow API keys
-- **Adds flexibility**: You can switch Langflow instances without changing your apps
-- **Improves security**: API keys are kept in one secure location
+- **Centralized access**: Single point of management for all agents
+- **Simplified configuration**: Client applications don't need Langflow API keys
+- **Flexibility**: Switch Langflow instances without modifying client applications
+- **Security**: API keys stored in one secure location
 
 ## Understanding the Code
 
-The entire FastAPI server is in one file: `app.py`. Let's break it down into sections:
+The entire FastAPI server is in one file: `app.py`. Here are the key components:
 
 ### 1. Configuration (Settings Class)
 
@@ -34,12 +34,10 @@ class Settings:
     DEFAULT_REQUEST_TIMEOUT: float = 30.0
 ```
 
-**What this does:**
+**Purpose:**
 - Loads settings from environment variables
 - Sets default values if not provided
-- Validates that required settings (like API key) exist
-
-**Think of it as:** The server's rulebook that defines how it should behave.
+- Validates required settings (like API key) on startup
 
 ### 2. Data Models (Pydantic Models)
 
@@ -52,12 +50,10 @@ class ChatResponse(BaseModel):
     data: str = Field(..., description="The response text")
 ```
 
-**What this does:**
+**Purpose:**
 - Defines the structure of requests and responses
 - Automatically validates incoming data
-- Generates documentation
-
-**Think of it as:** Forms that define what information can be sent and received.
+- Generates API documentation
 
 ### 3. HTTP Client
 
@@ -69,12 +65,10 @@ async def get_http_client() -> httpx.AsyncClient:
     return _http_client
 ```
 
-**What this does:**
-- Creates a reusable connection to make HTTP requests
-- Manages timeouts (how long to wait for responses)
-- Reuses connections for better performance
-
-**Think of it as:** A phone line that stays open instead of dialing every time.
+**Purpose:**
+- Creates a reusable HTTP client for making requests
+- Manages connection timeouts
+- Reuses connections for improved performance
 
 ### 4. Langflow Client
 
@@ -91,13 +85,11 @@ class LangFlowClient:
         # ... makes HTTP request to Langflow ...
 ```
 
-**What this does:**
-- Formats messages for Langflow
-- Sends messages with authentication
-- Handles errors gracefully
-- Extracts the response text
-
-**Think of it as:** A translator that speaks Langflow's language.
+**Purpose:**
+- Formats messages according to Langflow API specifications
+- Handles authentication via API key
+- Manages error handling
+- Extracts response text from Langflow's nested structure
 
 ### 5. Agent Registration
 
@@ -111,13 +103,11 @@ def create_langflow_router(path_prefix: str, url: str, summary: str):
         # ... process the message ...
 ```
 
-**What this does:**
-- Creates a unique endpoint for each agent
-- Handles incoming messages
-- Routes them to the correct Langflow agent
-- Returns responses in a standard format
-
-**Think of it as:** Creating a dedicated phone extension for each agent.
+**Purpose:**
+- Creates a unique API endpoint for each agent
+- Handles incoming message requests
+- Routes messages to the correct Langflow agent
+- Returns responses in standardized format
 
 ### 6. Agent Configuration
 
@@ -132,12 +122,10 @@ AGENT_CONFIGS = [
 ]
 ```
 
-**What this does:**
-- Lists all your AI agents
-- Specifies their endpoints
-- Connects each to its Langflow URL
-
-**Think of it as:** Your organization's directory of AI agents.
+**Purpose:**
+- Defines all available AI agents
+- Specifies their API endpoints
+- Maps each agent to its Langflow URL
 
 ## How Requests Flow Through the System
 
@@ -176,9 +164,9 @@ User Application Gets Answer
 
 ### Session Management
 
-**What it is:** The ability to maintain context across multiple messages.
+**Description:** The ability to maintain context across multiple messages in a conversation.
 
-**How it works:**
+**Implementation:**
 ```python
 # First message
 POST /api/my-agent
@@ -197,11 +185,11 @@ POST /api/my-agent
 # Response: "7" (remembers we were talking about 4)
 ```
 
-The `session_id` tells Langflow that these messages are part of the same conversation.
+The `session_id` parameter tells Langflow that these messages belong to the same conversation, enabling context retention.
 
 ### Error Handling
 
-The server handles various errors gracefully:
+The server implements comprehensive error handling:
 
 ```python
 try:
@@ -214,7 +202,7 @@ except httpx.RequestError as e:
     raise HTTPException(status_code=500, detail="Connection failed")
 ```
 
-**What this means:** Instead of crashing, the server returns helpful error messages.
+Instead of failing silently, the server returns informative HTTP error responses.
 
 ### Logging
 
@@ -222,7 +210,7 @@ except httpx.RequestError as e:
 logger.info(f"Agent request to {path_prefix} with session_id: {req.session_id}")
 ```
 
-The server logs important events, which helps with:
+The server logs important events for:
 - Debugging problems
 - Understanding usage patterns
 - Monitoring performance

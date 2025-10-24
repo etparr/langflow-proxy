@@ -105,92 +105,90 @@ The server will start at `http://localhost:8000`.
 ````markdown
 # Getting Started with Langflow Proxy
 
-This guide will help you set up and use the Langflow Proxy applications - designed for non-technical professionals and classroom environments.
+This guide provides setup and configuration instructions for the Langflow Proxy applications.
 
 ## What You'll Learn
 
-- How to install the applications
-- How to configure your Langflow connection
-- How to run the FastAPI server
-- How to use the Streamlit chat interface
+- Application installation procedures
+- Langflow connection configuration
+- FastAPI server operation
+- Streamlit chat interface usage
 
 ## Prerequisites
 
-Before you begin, you'll need:
+Required components:
 
-- **Python 3.8 or higher** installed on your computer
-  - Check by running: `python --version` or `python3 --version`
-  - Download from: https://www.python.org/downloads/
-- **A Langflow instance** with at least one deployed flow
-  - See [Langflow Setup Guide](LANGFLOW_SETUP.md) if you need help
-- **Your Langflow API key**
-  - Get this from your Langflow settings
-
-**Don't worry if you're not technical!** This guide assumes no prior programming experience.
+- **Python 3.8 or higher**
+  - Verify installation: `python --version` or `python3 --version`
+  - Download: https://www.python.org/downloads/
+- **Langflow instance** with at least one deployed flow
+  - See [Langflow Setup Guide](LANGFLOW_SETUP.md) for details
+- **Langflow API key**
+  - Obtain from Langflow settings
 
 ## Installation Steps
 
 ### Step 1: Download the Project
 
-If you have the project files:
+Navigate to project directory:
 ```bash
 cd langflow-proxy
 ```
 
-If you're cloning from a repository:
+Clone from repository:
 ```bash
 git clone <repository-url>
 cd langflow-proxy
 ```
 
-### Step 2: Install Python Packages
+### Step 2: Install Dependencies
 
-Open a terminal (Command Prompt on Windows, Terminal on Mac/Linux) and run:
+Install required Python packages:
 
 ```bash
 pip install -e .
 ```
 
-This installs everything you need. Wait for it to complete (may take a minute or two).
+This installs all required dependencies. Installation may take 1-2 minutes.
 
-**For Streamlit users**, also run:
+For Streamlit interface:
 ```bash
 pip install streamlit
 ```
 
-### Step 3: Create Your Configuration File
+### Step 3: Create Configuration File
 
-Create a file named `.env` in the `langflow-proxy` folder.
+Create a `.env` file in the `langflow-proxy` directory.
 
-**On Mac/Linux:**
+**macOS/Linux:**
 ```bash
 echo "LANGFLOW_API_KEY=your-api-key-here" > .env
 ```
 
-**On Windows:**
+**Windows:**
 ```bash
 echo LANGFLOW_API_KEY=your-api-key-here > .env
 ```
 
-**Or use a text editor:**
-1. Open a text editor (Notepad, TextEdit, etc.)
-2. Type: `LANGFLOW_API_KEY=your-api-key-here`
-3. Replace `your-api-key-here` with your actual API key
-4. Save as `.env` in the `langflow-proxy` folder
+**Using a text editor:**
+1. Create new file named `.env`
+2. Add: `LANGFLOW_API_KEY=your-api-key-here`
+3. Replace `your-api-key-here` with actual API key
+4. Save in `langflow-proxy` directory
 
-**Important:** Replace `your-api-key-here` with your actual Langflow API key!
+**Note:** Replace `your-api-key-here` with your actual Langflow API key.
 
 ## Running the Applications
 
-You can use either (or both) of these applications:
+Choose one or both applications based on your needs:
 
 ### Option 1: FastAPI Server (For Developers)
 
-The FastAPI server is a backend API that other applications can connect to.
+The FastAPI server provides a REST API for programmatic access to Langflow agents.
 
 #### Step 1: Configure Your Agents
 
-Open `app.py` in a text editor and find the `AGENT_CONFIGS` section (near the end of the file):
+Edit `app.py` and locate the `AGENT_CONFIGS` section near the end of the file:
 
 ```python
 AGENT_CONFIGS = [
@@ -203,13 +201,13 @@ AGENT_CONFIGS = [
 ]
 ```
 
-**How to get your Langflow URL:**
+**Obtaining Langflow URL:**
 1. Open your Langflow flow
-2. Click the "API" button (usually in the top right)
-3. Copy the entire URL shown
-4. Paste it in the `url` field
+2. Click the "API" button
+3. Copy the endpoint URL
+4. Paste in the `url` field
 
-**Example:**
+**Configuration example:**
 ```python
 AGENT_CONFIGS = [
     {
@@ -227,35 +225,35 @@ AGENT_CONFIGS = [
 python app.py
 ```
 
-You should see:
+Expected output:
 ```
 INFO:     Started server process
 INFO:     Uvicorn running on http://0.0.0.0:8000
 ```
 
-#### Step 3: Test It
+#### Step 3: Verify Installation
 
-Open your web browser and visit:
+Open web browser and visit:
 
 **Interactive Documentation:** http://localhost:8000/docs
 
-Here you can:
-- See all your configured agents
-- Test sending messages
-- View response formats
+Available actions:
+- View all configured agents
+- Test message sending
+- Review response formats
 
-**Try sending a message:**
+**Testing procedure:**
 1. Click on your agent endpoint (e.g., `/api/customer-support`)
 2. Click "Try it out"
-3. Fill in:
+3. Enter parameters:
    - `message`: "Hello!"
    - `session_id`: "test-123"
 4. Click "Execute"
-5. See the response!
+5. Review the response
 
-### Option 2: Streamlit Chat Interface (For Everyone!)
+### Option 2: Streamlit Chat Interface (For All Users)
 
-The Streamlit interface provides a simple chat window - perfect for non-technical users!
+The Streamlit interface provides a web-based chat interface requiring no programming knowledge.
 
 #### Step 1: Run Streamlit
 
@@ -263,70 +261,66 @@ The Streamlit interface provides a simple chat window - perfect for non-technica
 streamlit run streamlit_app.py
 ```
 
-Your browser should automatically open to the chat interface!
+Browser will open automatically to the chat interface.
 
-If not, visit: http://localhost:8501
+If browser doesn't open, navigate to: http://localhost:8501
 
-#### Step 2: Configure in the Interface
+#### Step 2: Configure Interface
 
-In the sidebar (left side), you'll see:
+Configure in the sidebar (left panel):
 
-**Langflow Agent URL:** Paste your Langflow flow URL here
-- Get this from Langflow (click API button)
+**Langflow Agent URL:** Enter your Langflow flow URL
+- Obtain from Langflow (click API button)
 - Format: `https://your-langflow.com/api/v1/run/your-flow-id`
 
-**Langflow API Key:** Your API key will automatically load from `.env`
-- You can also type it directly here
-- It will be hidden for security
+**Langflow API Key:** Automatically loads from `.env`
+- Can be manually entered if needed
+- Input is masked for security
 
-#### Step 3: Start Chatting!
+#### Step 3: Use the Interface
 
-1. Type a message in the chat box at the bottom
+1. Enter message in chat box at bottom
 2. Press Enter
-3. Wait for the response
-4. Continue the conversation!
+3. Wait for response
+4. Continue conversation
 
-**That's it!** No coding required.
+### Application Selection Guide
 
-## Which One Should I Use?
-
-| Use | Recommended App |
-|-----|-----------------|
-| Just want to chat with an agent | **Streamlit** |
-| Testing an agent quickly | **Streamlit** |
+| Use Case | Recommended Application |
+|----------|------------------------|
+| Chat with agent | **Streamlit** |
+| Quick agent testing | **Streamlit** |
 | Classroom demonstration | **Streamlit** |
-| Building an application | **FastAPI** |
-| Connecting multiple systems | **FastAPI** |
-| Need programmatic access | **FastAPI** |
-
-**For most users, start with Streamlit!**
+| Application development | **FastAPI** |
+| System integration | **FastAPI** |
+| Programmatic access | **FastAPI** |
 
 ## Common Issues and Solutions
 
 ### Issue: "command not found: python"
 
-**Try:** `python3` instead of `python`
+**Solution:** Use `python3` instead of `python`
 
-Many systems use `python3` as the command name.
+Many systems use `python3` as the command identifier.
 
 ### Issue: "LANGFLOW_API_KEY is required"
 
 **Solution:** 
-1. Make sure you created a `.env` file
-2. Check that it contains `LANGFLOW_API_KEY=your-key`
-3. Replace `your-key` with your actual API key
-4. The file should be in the `langflow-proxy` folder
+1. Verify `.env` file exists
+2. Confirm file contains `LANGFLOW_API_KEY=your-key`
+3. Replace `your-key` with actual API key
+4. File must be in `langflow-proxy` directory
 
 ### Issue: "Connection refused" or "Can't reach Langflow"
 
-**Check these:**
-1. Is your Langflow instance running?
-2. Is the URL correct? (Check for typos)
-3. Can you access the URL in your browser?
-4. Is your API key valid?
+**Verification steps:**
+1. Confirm Langflow instance is running
+2. Verify URL accuracy (check for typos)
+3. Test URL accessibility in browser
+4. Validate API key
 
-**Test your Langflow URL:**
-Open it in a browser - you should see something, not an error page.
+**Testing Langflow URL:**
+URL should be accessible in browser without error page.
 
 ### Issue: "No module named..."
 
@@ -339,19 +333,19 @@ pip install streamlit
 ### Issue: Streamlit shows "No agents available"
 
 **For Streamlit:**
-- Make sure you entered the Langflow Agent URL in the sidebar
+- Verify Langflow Agent URL entered in sidebar
 - Click "New Session" to refresh
 
 **For FastAPI:**
-- Check that `AGENT_CONFIGS` in `app.py` has at least one agent
+- Confirm `AGENT_CONFIGS` in `app.py` contains at least one agent
 - Restart the server
 
 ### Issue: "Address already in use"
 
-**Solution:** Something else is using the port
+**Solution:** Port conflict exists
 ```bash
 # For FastAPI (port 8000):
-# Stop other apps using port 8000, or change the port
+# Terminate other applications using port 8000, or change port
 
 # For Streamlit (port 8501):
 streamlit run streamlit_app.py --server.port 8502
@@ -359,7 +353,7 @@ streamlit run streamlit_app.py --server.port 8502
 
 ## Testing Your Setup
 
-### Quick Test Checklist
+### Verification Checklist
 
 [ ] **Python installed**: `python --version` shows 3.8 or higher  
 [ ] **Packages installed**: No errors when running pip install  
@@ -404,136 +398,118 @@ streamlit run streamlit_app.py --server.port 8502
 
 ### Project Structure
 
-Your `langflow-proxy` folder contains:
+Project directory contents:
 
 ```
 langflow-proxy/
-├── app.py              ← FastAPI server (all in one file!)
-├── streamlit_app.py    ← Streamlit interface (all in one file!)
-├── .env                ← Your API key (you create this)
+├── app.py              ← FastAPI server
+├── streamlit_app.py    ← Streamlit interface
+├── .env                ← API key configuration (create this)
 ├── examples.py         ← Code examples
-├── pyproject.toml      ← Dependency list
-└── docs/               ← Help files (like this one)
+├── pyproject.toml      ← Dependency specifications
+└── docs/               ← Documentation files
 ```
 
-**That's it!** Just two main files - super simple.
+The project uses a simplified two-file structure for educational purposes.
 
 ### Key Concepts
 
-**API Key:** Like a password that proves you're allowed to use Langflow.
+**API Key:** Authentication credential for Langflow API access.
 
-**Session ID:** A unique identifier for a conversation. Messages with the same session ID are treated as one conversation.
+**Session ID:** Unique identifier for a conversation. Messages with matching session IDs are treated as a continuous conversation.
 
-**Endpoint:** A URL path where you send messages (e.g., `/api/customer-support`).
+**Endpoint:** URL path for sending messages (e.g., `/api/customer-support`).
 
-**Timeout:** How long to wait for a response before giving up.
+**Timeout:** Maximum wait time for agent response before terminating the request.
 
 ## Next Steps
 
-Now that everything is running:
+After completing setup:
 
-### Learn More
+### Documentation Resources
 
-- **[Streamlit Guide](STREAMLIT_GUIDE.md)** - Detailed guide for the chat interface
-- **[FastAPI Guide](FASTAPI_GUIDE.md)** - Understanding the API server
+- **[Streamlit Guide](STREAMLIT_GUIDE.md)** - Detailed interface documentation
+- **[FastAPI Guide](FASTAPI_GUIDE.md)** - Server architecture explanation
 - **[API Reference](API_REFERENCE.md)** - Complete API documentation
-- **[Langflow Setup](LANGFLOW_SETUP.md)** - Creating and configuring Langflow flows
+- **[Langflow Setup](LANGFLOW_SETUP.md)** - Agent creation and configuration
 
-### Try These Examples
+### Example Exercises
 
-1. **Test basic chat**
-   - Send simple questions
-   - See how the agent responds
-   - Try follow-up questions
+1. **Basic communication test**
+   - Send simple queries
+   - Verify agent responses
+   - Test follow-up questions
 
-2. **Test conversation memory**
+2. **Conversation memory test**
    - Ask "What's 2 + 2?"
-   - Then ask "What's that plus 3?"
-   - The agent should remember it was 4
+   - Follow with "What's that plus 3?"
+   - Agent should respond with 7
 
-3. **Try different agents**
+3. **Multi-agent testing**
    - Add multiple agents to `AGENT_CONFIGS`
-   - Test each one
-   - Compare their responses
+   - Test each agent independently
+   - Compare response patterns
 
-4. **Experiment with settings**
-   - Try different timeouts
+4. **Configuration experiments**
+   - Modify timeout values
    - Use different session IDs
-   - See what happens!
+   - Observe behavior changes
 
 ## Getting Help
 
 ### Debug Mode
 
-Enable more detailed logging:
+Enable detailed logging:
 
-1. Edit your `.env` file
+1. Edit `.env` file
 2. Add: `LOG_LEVEL=DEBUG`
-3. Restart the app
-4. Check the console output for details
+3. Restart application
+4. Review console output for detailed information
 
-### Checking Logs
+### Log Review
 
-**FastAPI:** Look at the terminal where you ran `python app.py`
+**FastAPI:** Check terminal where `python app.py` was executed
 
-**Streamlit:** Look at the terminal where you ran `streamlit run streamlit_app.py`
+**Streamlit:** Check terminal where `streamlit run streamlit_app.py` was executed
 
 ### Common Questions
 
-**Q: Do I need both apps running?**  
-A: No! Use just Streamlit, or just FastAPI, or both. They work independently.
+**Q: Are both applications required?**  
+A: No. Applications function independently. Use Streamlit only, FastAPI only, or both.
 
-**Q: Can others use my Streamlit interface?**  
-A: Yes, if you share your computer's URL. But they'll need network access to your machine.
+**Q: Can other users access my Streamlit interface?**  
+A: Yes, if they have network access to your machine and the correct URL.
 
-**Q: Is this secure?**  
-A: This is an educational version. For production, add authentication and other security measures.
+**Q: Is this production-ready?**  
+A: No. This is an educational version. Production deployment requires authentication and additional security measures.
 
-**Q: Can I customize it?**  
-A: Yes! The code is simple and meant to be modified. Try changing things!
-
-## Tips for Classroom Use
-
-### For Instructors
-
-1. **Pre-configure agents** for students (edit `app.py`)
-2. **Create a shared `.env`** with a classroom API key
-3. **Provide the Langflow URL** to students
-4. **Have students test** with Streamlit first
-5. **Then explore** the FastAPI code together
-
-### For Students
-
-1. **Start with Streamlit** - it's the easiest
-2. **Read the guides** in the `docs/` folder
-3. **Experiment freely** - you can't break anything!
-4. **Ask questions** when you get stuck
-5. **Try modifying** the code after you understand it
+**Q: Can I modify the code?**  
+A: Yes. The code is designed to be readable and modifiable for learning purposes.
 
 ## Advanced Setup (Optional)
 
-### Using Virtual Environments
+### Virtual Environment Configuration
 
-For cleaner package management:
+For isolated package management:
 
 ```bash
 # Create virtual environment
 python -m venv venv
 
-# Activate it (Mac/Linux)
+# Activate (macOS/Linux)
 source venv/bin/activate
 
-# Activate it (Windows)
+# Activate (Windows)
 venv\Scripts\activate
 
 # Install packages
 pip install -e .
 ```
 
-### Running on a Different Port
+### Port Configuration
 
 **FastAPI:**
-Edit `app.py`, find the last line:
+Edit `app.py`, modify final line:
 ```python
 uvicorn.run("app:app", port=8080)  # Changed from 8000
 ```
@@ -545,16 +521,14 @@ streamlit run streamlit_app.py --server.port 8502
 
 ### Production Deployment
 
-For real-world use, see [DEPLOYMENT.md](DEPLOYMENT.md) for:
-- Cloud hosting
-- Security measures
-- Scaling considerations
-- Monitoring
+For production use, refer to [DEPLOYMENT.md](DEPLOYMENT.md) for:
+- Cloud hosting options
+- Security implementation
+- Scaling strategies
+- Monitoring configuration
 
 ---
 
-**You're all set!** Start with Streamlit and have fun chatting with your AI agents!
-
-For questions or issues, check the other docs or ask for help.
+**Setup complete.** Begin with Streamlit for immediate agent interaction.
 
 ````

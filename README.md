@@ -243,27 +243,3 @@ This project demonstrates several important concepts:
 - **User Interfaces**: Building chat applications
 
 For more details, check out the documentation in the `docs/` folder!
-
-## Educational Purpose
-
-This repository is designed for **classroom use** to teach:
-
-- How AI agents work
-- Basic API architecture
-- Building chat interfaces
-- Connecting different services together
-
-It prioritizes **clarity and simplicity** over production-readiness.
-
-## License
-
-[Your License Here]
-
-## Support
-
-For issues or questions, please [open an issue](link-to-issues) or contact [your contact info].
-
----
-
-**Happy Learning!**
-
