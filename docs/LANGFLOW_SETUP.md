@@ -229,6 +229,8 @@ spec:
   type: LoadBalancer
 ```
 
+```
+
 Deploy:
 
 ```bash
