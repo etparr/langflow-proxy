@@ -62,6 +62,58 @@ ENV LANGFLOW_LOG_ENV=container
 
 EXPOSE 7860
 CMD ["langflow", "run", "--host", "0.0.0.0", "--port", "7860"]
+```
+
+### Basic Docker Setup
+
+Create a directory structure:
+
+```bash
+mkdir langflow-deployment
+cd langflow-deployment
+```
+
+Create a `docker.env` file with environment variables:
+
+```env
+LANGFLOW_AUTO_LOGIN=False
+LANGFLOW_SAVE_DB_IN_CONFIG_DIR=True
+LANGFLOW_BASE_URL=http://0.0.0.0:7860
+OPENAI_API_KEY=your-openai-key-here
+```
+
+Create a `Dockerfile`:
+
+```dockerfile
+FROM langflowai/langflow:latest
+
+RUN mkdir /app/flows
+RUN mkdir /app/langflow-config-dir
+WORKDIR /app
+
+COPY flows /app/flows
+COPY langflow-config-dir /app/langflow-config-dir
+COPY docker.env /app/.env
+
+ENV PYTHONPATH=/app
+ENV LANGFLOW_LOAD_FLOWS_PATH=/app/flows
+ENV LANGFLOW_CONFIG_DIR=/app/langflow-config-dir
+ENV LANGFLOW_LOG_ENV=container
+
+EXPOSE 7860
+CMD ["langflow", "run", "--host", "0.0.0.0", "--port", "7860"]
+```
+
+Build & run:
+
+```bash
+docker build -t my-langflow:latest .
+docker run -p 7860:7860 my-langflow:latest
+```
+
+Then access at `http://localhost:7860`.
+
+### Docker Compose Setup
 \`\`\`
 
 Build & run:  
@@ -90,6 +142,15 @@ services:
       - ./flows:/app/flows
       - ./langflow-config-dir:/app/langflow-config-dir
     command: langflow run --host 0.0.0.0 --port 7860
+```
+
+Then:
+
+```bash
+docker-compose up -d
+```
+
+---
 \`\`\`
 Then:
 \`\`\`bash
@@ -143,7 +204,7 @@ spec:
     spec:
       containers:
       - name: langflow
-        image: your‑registry/langflow:latest
+        image: your-registry/langflow:latest
         ports:
         - containerPort: 7860
         env:
@@ -152,8 +213,8 @@ spec:
         - name: OPENAI_API_KEY
           valueFrom:
             secretKeyRef:
-              name: langflow‑secrets
-              key: openai‑api‑key
+              name: langflow-secrets
+              key: openai-api-key
 ---
 apiVersion: v1
 kind: Service
@@ -166,6 +227,13 @@ spec:
   - port: 80
     targetPort: 7860
   type: LoadBalancer
+```
+
+Deploy:
+
+```bash
+kubectl apply -f langflow-deployment.yaml
+```
 \`\`\`
 
 Deploy:  
@@ -185,7 +253,7 @@ kubectl apply -f langflow-deployment.yaml
 
 [Langflow Quickstart Guide](https://docs.langflow.org/get-started-quickstart)
 
-### Exporting
+### Exporting Flows
 
 Click "Export" then "Download JSON" and save in `flows/` directory.
 
@@ -229,7 +297,7 @@ LANGFLOW_API_KEY=lf-your-api-key-here
 
 Langflow uses SQLite for development by default.
 
-### PostgreSQL Setup
+### PostgreSQL Setup (Production)
 
 ```env
 LANGFLOW_DATABASE_URL=postgresql://user:password@host:5432/langflow
@@ -266,7 +334,7 @@ GOOGLE_API_KEY=your-key
 
 ## Testing Your Langflow Instance
 
-### curl
+### Using curl
 
 ```bash
 curl https://your-langflow-instance.com/health
@@ -282,7 +350,7 @@ curl -X POST https://your-langflow-instance.com/api/v1/run/FLOW_ID \
   }'
 ```
 
-### Python
+### Using Python
 
 ```python
 import httpx
@@ -309,34 +377,36 @@ async def test_langflow():
 
 ## Monitoring and Logging
 
+Set log level:
+
 ```env
 LANGFLOW_LOG_LEVEL=DEBUG
 ```
 
 View logs:
 
-- Docker: `docker logs -f <container-id>`
-- Kubernetes: `kubectl logs -f deployment/langflow`  
+- **Docker**: `docker logs -f <container-id>`
+- **Kubernetes**: `kubectl logs -f deployment/langflow`  
 
 ---
 
 ## Troubleshooting
 
-### Can't connect
+### Can't Connect
 
 - Check container or pod is running (`docker ps`, `kubectl get pods`)
 - Verify port 7860 is open and mapped
 - Confirm proxy to Langflow network connectivity
 
-### Authentication failures
+### Authentication Failures
 
 - Ensure API key and `x-api-key` header are correct
 - Check authentication is enabled in Langflow
 
-### Flows not loading
+### Flows Not Loading
 
 - Validate JSONs in `/app/flows`
-- Confirm `LANGFLOW_LOAD_FLOWS_PATH` is set correctly  
+- Confirm `LANGFLOW_LOAD_FLOWS_PATH` is set correctly
 
 ---
 
