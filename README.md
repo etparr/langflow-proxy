@@ -1,4 +1,3 @@
-````markdown
 # Langflow Proxy Server
 
 A simple educational project demonstrating how to interact with Langflow agents. This repository contains two applications:
@@ -268,4 +267,3 @@ For issues or questions, please [open an issue](link-to-issues) or contact [your
 
 **Happy Learning!**
 
-````
